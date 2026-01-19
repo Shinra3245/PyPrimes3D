@@ -1,42 +1,33 @@
-# Usar Python 3.11 como base (coincidiendo con tu sistema)
 FROM python:3.11-slim
 
-# Instalar dependencias de Linux para gráficos, GLUT y servidor web VNC 
+# 1. Instalar dependencias de sistema, PulseAudio para el motor de sonido y procps
 RUN apt-get update && apt-get install -y \
-    xvfb \
-    x11vnc \
-    novnc \
-    websockify \
-    libgl1-mesa-dri \
-    libgl1-mesa-glx \
-    libglu1-mesa \
-    freeglut3 \
+    xvfb x11vnc novnc websockify \
+    libgl1-mesa-dri libgl1 libglu1-mesa libglut3.12 \
+    libglib2.0-0 libsm6 libxext6 libxrender1 procps \
+    pulseaudio alsa-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Definir el directorio de trabajo
 WORKDIR /app
 
-# Copiar el archivo de requerimientos e instalar paquetes
+# 2. Configurar variables de entorno para gráficos y audio
+ENV DISPLAY=:99
+ENV PYTHONPATH=/app
+ENV SDL_AUDIODRIVER=pulseaudio
+
+# 3. Instalar librerías de Python según tus versiones verificadas
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar el resto del código y recursos (Carpeta AimLabs y Resource)
+# 4. Copiar todo el proyecto respetando tu estructura de carpetas
 COPY . .
 
-# Exponer el puerto 8080 para acceder desde el navegador
 EXPOSE 8080
 
-# Configurar el entorno para la pantalla virtual
-ENV DISPLAY=:99
-ENV PYTHONPATH=/app
-
-# Comando de inicio:
-# 1. Crea la pantalla virtual (Xvfb)
-# 2. Inicia el servidor VNC para capturar los gráficos
-# 3. Inicia noVNC para convertir el flujo a una web
-# 4. Ejecuta tu juego principal
-CMD Xvfb :99 -screen 0 1250x650x24 & \
+# 5. Comando de inicio corregido para encontrar la carpeta 'Resource/'
+CMD pulseaudio --start --exit-idle-time=-1 && \
+    Xvfb :99 -screen 0 1250x650x24 & \
     sleep 2 && \
     x11vnc -display :99 -nopw -forever & \
-    /usr/share/novnc/utils/launch.sh --vnc localhost:5900 --listen 8080 & \
-    python AimLabs/PyPrimes3D.py
+    /usr/share/novnc/utils/novnc_proxy --vnc localhost:5900 --listen 8080 & \
+    cd AimLabs && python PyPrimes3D.py
