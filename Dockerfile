@@ -27,7 +27,8 @@ EXPOSE 8080
 # 5. Comando de inicio corregido para encontrar la carpeta 'Resource/'
 CMD pulseaudio --start --exit-idle-time=-1 && \
     Xvfb :99 -screen 0 1250x650x24 & \
-    sleep 2 && \
-    x11vnc -display :99 -nopw -forever & \
-    /usr/share/novnc/utils/novnc_proxy --vnc localhost:5900 --listen 8080 & \
+    sleep 3 && \
+    x11vnc -display :99 -nopw -forever -shared -rfbport 5900 & \
+    # Usamos websockify directamente para mayor control sobre el puerto de Render
+    websockify --web /usr/share/novnc ${PORT:-8080} localhost:5900 & \
     cd AimLabs && python PyPrimes3D.py
