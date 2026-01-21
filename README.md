@@ -20,82 +20,57 @@ PyPrimes 3D es un videojuego de entrenamiento de puntería (estilo AimLabs) desa
 | Cálculo Numérico | NumPy 1.26.4 |
 | Procesamiento de Imágenes | Pillow 12.1.0 |
 | Matemáticas Simbólicas | SymPy 1.14.0 y Mpmath 1.3.0 |
-| Contenedor | Docker (Linux Debian-slim) |
+| Distrinucion | PyInstaller (Portable Executable) |
+
 
 
 ## Estructura del proyecto
 
 La organización del código sigue una jerarquía modular para facilitar el despliegue y mantenimiento:
 
-```Arbol
+```Arbol de archivos
 PyPrimes3D/
-├── AimLabs/                # Paquete principal del videojuego
-│   ├── Resource/           # Assets (Audios, Fondos, Texturas y Memes)
-│   ├── animacion.py        # Motor de renderizado y física de esferas
-│   ├── Menu.py             # Lógica de menús e instrucciones
-│   ├── primes.py           # Algoritmos de números primos
-│   └── PyPrimes3D.py       # Punto de entrada (Main)
-├── .gitignore              # Archivos excluidos de Git
-├── Dockerfile              # Configuración de imagen Docker (Xvfb + noVNC)
-├── docker-compose.yml      # Orquestación de servicios y puertos
-├── README.md               # Documentación del proyecto
-└── requirements.txt        # Dependencias del intérprete
+├── PyPrimes3D.py          # Punto de entrada (Main), gestión de Fullscreen e Intro
+├── animacion.py           # Motor de renderizado, física y lógica de dificultad
+├── primes.py              # Algoritmos de generación de números primos
+├── AimLabs/               # Módulos de soporte
+│   ├── __init__.py        # Inicializador de paquete
+│   ├── Menu.py            # Lógica de interfaz de usuario e instrucciones
+│   └── Resource/          # Assets (Audios, Fondos, Texturas y Memes)
+├── requirements.txt       # Dependencias del entorno de desarrollo
+└── README.md              # Documentación técnica
 ```
 
-## Despliegue con Docker (noVNC)
+# EJECUCION Y DESCARGA
+## opcion 1: Ejecutable Portátil (Recomendado)
+Para jugar sin configurar un entorno de Python, descarga el archivo PyPrimes 3D.exe desde la sección de Releases de este repositorio.
 
-Para integrar este juego en un portafolio web de forma desacoplada, se utiliza una arquitectura de pantalla virtual:
+Nota: Al ser un ejecutable independiente no firmado, es posible que Windows muestre una advertencia de seguridad. Puedes ejecutarlo con confianza ya que el código fuente es abierto.
 
+## Opción 2: Instalación Local para Desarrolladores
 
-
-
-**Xvfb:** Simula un monitor físico en la memoria del servidor Linux.
-
-**noVNC:** Permite que los gráficos generados por OpenGL sean transmitidos a través de un navegador web mediante WebSockets.
-
-
-## Instrucciones de uso con docker
-
-1. Construir la imagen:
+1. Clona el repositorio:
 
 ```bash
-  docker-compose build
+  git clone https://github.com/Shinra3245/PyPrimes3D.git
 ```
 
-2. Iniciar el contenedor:
-
-```bash
-  docker-compose up
-```
-
-3. Acceder desde el navegador:
-
-`http://localhost:8080/vnc.html?autoconnect=true`
-
-
-
-### Instalación Local
-
-Si deseas ejecutar el proyecto directamente en Windows, asegúrate de tener instalado Python 3.11.9 y los binarios de freeglut correspondientes a tu arquitectura.
-
-1. Instalar dependencias:
+2. Instala las dependencias :
 
 ```bash
   pip install -r requirements.txt
 ```
 
+3. Ejecuta el archivo Principal:
 
-1. Ejecutar el juego:
-
-```bash
-  python AimLabs/PyPrimes3D.py
-```
-
-
+`python PyPrimes3D.py`
 
 ## Imagenes del juego
 
-![Menu](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![Menu](Menu.PNG)
+![Menu_Instrucciones](Menu_instrucciones.PNG)
+![Juego](Juego.PNG)
+![pantalla_victoria](Pantalla_victoria.PNG)
 
 
 ## Autor
