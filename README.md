@@ -68,9 +68,9 @@ Nota: Al ser un ejecutable independiente no firmado, es posible que Windows mues
 ## Imagenes del juego
 
 ![Menu](Menu.PNG)
-![Menu_Instrucciones](Menu_instrucciones.PNG)
-![Juego](Juego.PNG)
-![pantalla_victoria](Pantalla_victoria.PNG)
+![Menu_Instrucciones](Menu_instrucciones.png)
+![Juego](Juego.png)
+![pantalla_victoria](Pantalla_victoria.png)
 
 
 ## Autor
