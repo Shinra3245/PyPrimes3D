@@ -1,14 +1,22 @@
 #animacion.py
+import os
+import sys
 import pygame
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import numpy as np
 from PIL import Image
-
 from primes import generate_primes, factorize_number
-
 import pygame.mixer
+
+def resource_path(relative_path):
+    try:
+        # PyInstaller crea una carpeta temporal y guarda la ruta en _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 
 class Sphere:
@@ -191,17 +199,17 @@ class Animation:
 
         #Configuración de audio:
         pygame.mixer.init()
-        self.sound_prime = pygame.mixer.Sound("Resource/esfera-prima.mp3")
-        self.sound_non_prime = pygame.mixer.Sound("Resource/esfera-no-prima.mp3")
-        self.victory_music = "Resource/ganar.mp3"  # Ruta al archivo de música de victoria
-        self.game_music = "Resource/Soundtrack.mp3"
+        self.sound_prime = pygame.mixer.Sound(resource_path("Resource/esfera-prima.mp3"))
+        self.sound_non_prime = pygame.mixer.Sound(resource_path("Resource/esfera-no-prima.mp3"))
+        self.victory_music = resource_path("Resource/ganar.mp3")  # Ruta al archivo de música de victoria
+        self.game_music = resource_path("Resource/Soundtrack.mp3")
 
         pygame.mixer.music.load(self.game_music)
         pygame.mixer.music.set_volume(0.5)  # Ajustar volumen
         pygame.mixer.music.play(-1)  # Reproducir en bucle
 
-        self.defeat_texture_id = self.load_defeat_image("Resource/MEMES/A-dar-lastima-a-otro-lado.jpg")
-        self.load_victory_gif("Resource/MEMES/gmod-skeleton.gif")
+        self.defeat_texture_id = self.load_defeat_image(resource_path("Resource/MEMES/A-dar-lastima-a-otro-lado.jpg"))
+        self.load_victory_gif(resource_path("Resource/MEMES/gmod-skeleton.gif"))
         self.current_victory_frame = 0
 
         # Inicializar caritas tristes
@@ -414,11 +422,11 @@ class Animation:
     def load_textures(self):
 
         image_files = [
-            "Resource/Backgrounds/frente_2.jpg",
-            "Resource/Backgrounds/izquierda_2.jpg",
-            "Resource/Backgrounds/derecha_2.jpg",
-            "Resource/Backgrounds/arriba_2.jpg",
-            "Resource/Backgrounds/abajo_2.jpg",
+            resource_path("Resource/Backgrounds/frente_2.jpg"),
+            resource_path("Resource/Backgrounds/izquierda_2.jpg"),
+            resource_path("Resource/Backgrounds/derecha_2.jpg"),
+            resource_path("Resource/Backgrounds/arriba_2.jpg"),
+            resource_path("Resource/Backgrounds/abajo_2.jpg"),
         ]
 
         self.texture_ids = glGenTextures(len(image_files))
@@ -863,7 +871,7 @@ class Animation:
 
     def play_defeat_music(self):
         """Reproduce música de derrota."""
-        pygame.mixer.music.load("Resource/Lose.mp3")  # Ruta de tu archivo de música de derrota
+        pygame.mixer.music.load(resource_path("Resource/Lose.mp3")) # Ruta de tu archivo de música de derrota
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play(1)  # Reproducir una sola vez
 

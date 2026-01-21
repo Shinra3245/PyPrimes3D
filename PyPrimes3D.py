@@ -1,3 +1,5 @@
+import os
+import sys
 import pygame
 from pygame.locals import *
 import sys
@@ -8,10 +10,19 @@ from AimLabs.Menu import Menu, InstructionsScreen
 from animacion import Animation
 
 
+def resource_path(relative_path):
+    try:
+        # PyInstaller crea una carpeta temporal y guarda la ruta en _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+
 def show_intro(screen, display):
     # Cargar música de introducción
     pygame.mixer.init()
-    pygame.mixer.music.load("Resource/intro.mp3")
+    pygame.mixer.music.load(resource_path("Resource/intro.mp3"))
     pygame.mixer.music.set_volume(0.2)  # Ajusta el volumen (0.0 a 1.0)
     pygame.mixer.music.play(-1)  # Reproducir en bucle
 
@@ -57,8 +68,9 @@ def main():
         print("Continuando sin GLUT - usando implementación alternativa")
 
     # PASO 3: Configurar el display
-    display = (1250, 650)
-    screen = pygame.display.set_mode(display)
+    info = pygame.display.Info()
+    display = (info.current_w, info.current_h)
+    screen = pygame.display.set_mode(display, pygame.FULLSCREEN)
     pygame.display.set_caption("PyPrimes 3D")
 
     # Mostrar pantalla de introducción
@@ -67,29 +79,29 @@ def main():
     # Configurar las instrucciones (mantener el código original)
     instructions = [
         {
-            "image": pygame.image.load("Resource/Instructions/instruccion 1.PNG"),
+            "image": pygame.image.load(resource_path("Resource/Instructions/instruccion 1.PNG")),
             "text": "Usa el mouse para hacer clic en las esferas primas.",
         },
         {
-            "image": pygame.image.load("Resource/Instructions/instruccion 2.PNG"),
+            "image": pygame.image.load(resource_path("Resource/Instructions/instruccion 2.PNG")),
             "text": "Evita hacer clic en las esferas no primas.",
         },
         {
-            "image": pygame.image.load("Resource/Instructions/instruccion 3.PNG"),
-            "text": "No dejes que se te acabe el tiempo",
+            "image": pygame.image.load(resource_path("Resource/Instructions/instruccion 3.PNG")),
+            "text": "No dejes que se te acabe el tiempo, ¡CUIDADO! En cada nivel las esferas son más pequeñas y veloces.",
         },
         {
-            "image": pygame.image.load("Resource/Instructions/instruccion 4.PNG"),
-            "text": "Revienta todas las esferas primas para ganar",
+            "image": pygame.image.load(resource_path("Resource/Instructions/instruccion 4.PNG")),
+            "text": "Revienta todas las esferas primas para ganar.",
         },
         {
             "image": None,
-            "text": "Disfruta del juego flacow",
+            "text": "¡Suerte, flacow!",
         },
     ]
 
     instructions_screen = InstructionsScreen(screen, instructions)
-    gif_frames = instructions_screen.load_gif("Resource/Instructions/esqueleto.gif")
+    gif_frames = instructions_screen.load_gif(resource_path("Resource/Instructions/esqueleto.gif"))
     instructions[4]["image"] = gif_frames  # Reemplazar el GIF cargado
     in_help = False
 
@@ -127,7 +139,7 @@ def main():
             pygame.display.flip()
 
     # PASO 4: Cambiar a modo OpenGL DESPUÉS de GLUT
-    pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
+    pygame.display.set_mode(display, DOUBLEBUF | OPENGL | FULLSCREEN)
 
     # PASO 5: Configurar OpenGL
     glMatrixMode(GL_PROJECTION)
@@ -137,7 +149,7 @@ def main():
     gluLookAt(0, 0, 21, 0, 0, 0, 0, 1, 0)
 
     # PASO 6: Inicializar la animación
-    animation = Animation(1250, 650, 40)  # Inicializa con 40 esferas
+    animation = Animation(display[0], display[1], 40)  # Inicializa con 40 esferas
     animation.create_spheres(40)  # Genera las 40 esferas iniciales
 
     # PASO 7: Loop principal del juego

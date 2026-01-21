@@ -1,8 +1,17 @@
 # Menu.py
+import os
+import sys
 import pygame
 import math
-
 from PIL import Image
+
+def resource_path(relative_path):
+    """ Obtiene la ruta absoluta de los recursos, compatible con PyInstaller """
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 class Menu:
     def __init__(self, width, height):
@@ -20,15 +29,15 @@ class Menu:
         self.help_button_radius = 50
         # Cargar música de fondo
         pygame.mixer.init()
-        self.menu_music = "Resource/MenuMusic.mp3"
+        self.menu_music = resource_path("Resource/MenuMusic.mp3")
         pygame.mixer.music.load(self.menu_music)
         pygame.mixer.music.set_volume(0.2)
         pygame.mixer.music.play(-1)
         # Cargar la imagen de fondo
-        self.background_image = pygame.image.load("Resource/Backgrounds/Background image.jpg").convert()
+        self.background_image = pygame.image.load(resource_path("Resource/Backgrounds/Background image.jpg")).convert()
         self.background_image = pygame.transform.scale(self.background_image, (self.width, self.height))
         self.background_alpha = 255
-        self.start_sound = pygame.mixer.Sound("Resource/boton-Iniciar.mp3")
+        self.start_sound = pygame.mixer.Sound(resource_path("Resource/boton-Iniciar.mp3"))
         self.frame_count = 0
 
     def stop_music(self):
@@ -166,9 +175,9 @@ class InstructionsScreen:
         self.instructions = instructions
         self.current_index = 0
         self.arrow_size = (50, 50)
-        self.left_arrow = pygame.image.load("Resource/Instructions/flecha-izquierda.jpg")
+        self.left_arrow = pygame.image.load(resource_path("Resource/Instructions/flecha-izquierda.jpg"))
         self.left_arrow = pygame.transform.scale(self.left_arrow, self.arrow_size)
-        self.right_arrow = pygame.image.load("Resource/Instructions/flecha-derecha.jpg")
+        self.right_arrow = pygame.image.load(resource_path("Resource/Instructions/flecha-derecha.jpg"))
         self.right_arrow = pygame.transform.scale(self.right_arrow, self.arrow_size)
         self.font = pygame.font.Font(None, 50)
         self.gif_timer = 0
