@@ -65,6 +65,28 @@ Nota: Al ser un ejecutable independiente no firmado, es posible que Windows mues
 
 `python PyPrimes3D.py`
 
+## Opción 3: Fedora / Linux (Recomendado en Fedora)
+
+En Fedora la forma más sencilla de jugar es con el lanzador incluido, que crea
+el entorno virtual, instala las dependencias correctas y arranca el juego.
+
+1. Instala las librerías gráficas de sistema (una sola vez):
+
+```bash
+  sudo dnf install python3 freeglut mesa-libGL mesa-libGLU
+```
+
+2. Ejecuta el lanzador:
+
+```bash
+  ./run_fedora.sh
+```
+
+> Nota técnica: en Fedora con Python 3.14 se usa `requirements-fedora.txt`, que
+> reemplaza `pygame` por `pygame-ce` (la rueda oficial de `pygame` no incluye el
+> módulo de audio `mixer` para Python 3.14) y usa `numpy` 2.x. El lanzador se
+> encarga de todo automáticamente. Verificado en Fedora 44.
+
 ## Imagenes del juego
 
 ![Menu](Menu.PNG)
